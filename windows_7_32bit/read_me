@@ -1,0 +1,3 @@
+# to compile and execute the examples problems use the following:
+cl /I ..\src ..\examples\fdaf1.c snlp.lib
+fdaf1.exe

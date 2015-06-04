@@ -1,0 +1,7 @@
+# in a mingw terminal type:
+cc -Wall -O3 -I ../src ../src/*.c -D SNLP_EXPORTS -s -shared -o snlp.dll -Wl,--output-def,snlp.def,--out-implib,libsnlp.a
+
+# in a Visual Studios developer command prompt type:
+lib /machine:i386 /def:snlp.def
+cd ..\windows_7_32bit
+copy ..\lib\*snlp* .

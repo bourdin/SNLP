@@ -1,0 +1,5 @@
+EXPORTS
+    SNLPDelete @1
+    SNLPL1SQP @2
+    SNLPLinfSQP @3
+    SNLPNew @4
