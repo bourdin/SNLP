@@ -42,8 +42,9 @@ struct  nlpstatistics_ {
 typedef struct nlpstatistics_ NLPStatistics;
 
 NLPStatistics
-NLPsolve(double (*fhg) (Vector x, Vector h, Vector g),
-         void (*Dfhg) (Vector x, Vector df, Matrix dh, Matrix dg),
+NLPsolve(double (*fhg) (Vector x, Vector h, Vector g, void *ctx),
+         void (*Dfhg) (Vector x, Vector df, Matrix dh, Matrix dg, void *ctx),
+         void *ctx,
          Vector x, Vector lambda, Vector mu,
          NLPOptions options);
 

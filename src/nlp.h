@@ -27,13 +27,13 @@ struct nlp_ {
     // compute h(x): m-Vector
     // compute g(x): p-Vector
     // x is an n-Vector
-    double (*fhg)(Vector x, Vector h, Vector g);
+    double (*fhg)(Vector x, Vector h, Vector g, void *ctx);
     
     // compute Df = df/dx: n-Vector
     // compute Dh = dh/dx: m-by-n Matrix
     // compute Dg = dg/dx: p-by-n Matrix
-    void (*Dfhg)(Vector x, Vector Df, Matrix Dh, Matrix Dg);
-    
+    void (*Dfhg)(Vector x, Vector Df, Matrix Dh, Matrix Dg, void *ctx);
+    void *ctx;
     // private
 
     Equations e;
@@ -45,7 +45,7 @@ typedef struct nlp_ * NLP;
 
 NLP NLPNew();
 void NLPDelete(NLP a);
-void NLPDfhg(NLP a, Vector x0, Vector Df, Matrix Dh, Matrix Dg);
+void NLPDfhg(NLP a, Vector x0, Vector Df, Matrix Dh, Matrix Dg, void *ctx);
 
 #ifdef	__cplusplus
 }

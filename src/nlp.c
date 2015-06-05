@@ -42,6 +42,7 @@ NLP NLPNew() {
     a->p = 0;
     a->fhg = NULL;
     a->Dfhg = NULL;
+    a->ctx = NULL;
     // private data for finite difference derivatives
     a->e = NULL;
     a->De = NULL;
@@ -68,7 +69,7 @@ void NLPDelete(NLP a) {
 }
 
 // compute the derivatives using a forward difference approximation
-void NLPDfhg(NLP a, Vector x0, Vector Df, Matrix Dh, Matrix Dg) {
+void NLPDfhg(NLP a, Vector x0, Vector Df, Matrix Dh, Matrix Dg, void *ctx) {
     int n, m, p, i, j;
     double *Dhi, *Dgi, *Dei;
     thisNLP = a;
@@ -113,7 +114,7 @@ void NLPDfhg(NLP a, Vector x0, Vector Df, Matrix Dh, Matrix Dg) {
 void NLPfhg(Vector x, Vector F) {
     int i;
     NLP a = thisNLP;
-    F->e[0] = a->fhg(x, a->h, a->g);
+    F->e[0] = a->fhg(x, a->h, a->g, a->ctx);
     for (i = 0; i < a->m; i++) {
         F->e[1+i] = a->h->e[i];
     }

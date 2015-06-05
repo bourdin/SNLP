@@ -320,12 +320,12 @@ void L1SQPallocateStorage(L1SQP a) {
     a->nrelax = 0;
     a->nrefine = 0;
 
-    a->f = a->nlp->fhg(a->x0, a->h, a->g);
+    a->f = a->nlp->fhg(a->x0, a->h, a->g, a->nlp->ctx);
     a->nfun++;
     if (a->fd_gradient == YES) {
-        NLPDfhg(a->nlp, a->x0, a->df, a->dh, a->dg);
+        NLPDfhg(a->nlp, a->x0, a->df, a->dh, a->dg, a->nlp->ctx);
     } else {
-        a->nlp->Dfhg(a->x0, a->df, a->dh, a->dg);
+        a->nlp->Dfhg(a->x0, a->df, a->dh, a->dg, a->nlp->ctx);
     }
     a-> ngrad++;
 
@@ -842,7 +842,7 @@ void L1SQPlineSearch(L1SQP a) {
             VectorAxpy(a->x, a->alpha * a->alpha, a->d_soc);
         }
 
-        a->f = a->nlp->fhg(a->x, a->h, a->g);
+        a->f = a->nlp->fhg(a->x, a->h, a->g, a->nlp->ctx);
         a->nfun++;
         theta1 = a->f;
         for (i = 0; i < m; i++) {
@@ -889,7 +889,7 @@ void L1SQPlineSearch(L1SQP a) {
                 a->do_soc = YES;
                 a->nsoc++;
                 VectorAxpy(a->x, 1, a->d_soc);
-                a->f = a->nlp->fhg(a->x, a->h, a->g);
+                a->f = a->nlp->fhg(a->x, a->h, a->g,a->nlp->ctx);
                 a->nfun++;
                 theta1 = a->f;
                 for (i = 0; i < m; i++) {
@@ -1010,9 +1010,9 @@ void L1SQPupdate(L1SQP a) {
         return;
     }
     if (a->fd_gradient == YES) {
-        NLPDfhg(a->nlp, a->x, a->df, a->dh, a->dg);
+        NLPDfhg(a->nlp, a->x, a->df, a->dh, a->dg, a->nlp->ctx);
     } else {
-        a->nlp->Dfhg(a->x, a->df, a->dh, a->dg);
+        a->nlp->Dfhg(a->x, a->df, a->dh, a->dg, a->nlp->ctx);
     }
 
     a->ngrad++;

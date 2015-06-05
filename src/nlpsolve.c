@@ -60,8 +60,9 @@
 //      stats.numberOfSOC;
 //      stats.exitCode;
 NLPStatistics
-NLPsolve(double (*fhg) (Vector x, Vector h, Vector g),
-         void (*Dfhg) (Vector x, Vector df, Matrix dh, Matrix dg),
+NLPsolve(double (*fhg) (Vector x, Vector h, Vector g, void *ctx),
+         void (*Dfhg) (Vector x, Vector df, Matrix dh, Matrix dg, void *ctx),
+         void *ctx,
          Vector x, Vector lambda, Vector mu,
          NLPOptions options) {
 
@@ -97,6 +98,7 @@ NLPsolve(double (*fhg) (Vector x, Vector h, Vector g),
     nlp->p = p;
     nlp->fhg = fhg;
     nlp->Dfhg = Dfhg;
+    nlp->ctx = ctx;
 
     stats.n = n;
     stats.m = m;

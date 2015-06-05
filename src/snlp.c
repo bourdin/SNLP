@@ -17,13 +17,14 @@
 #include "nlpsolve.h"
 
 int snlp_solve(SNLP s, double *x_ptr, int method);
-double snlp_fhg(Vector xv, Vector hv, Vector gv);
-void snlp_dfhg(Vector xv, Vector dfv, Matrix dhv, Matrix dgv);
+double snlp_fhg(Vector xv, Vector hv, Vector gv, void *ctx);
+void snlp_dfhg(Vector xv, Vector dfv, Matrix dhv, Matrix dgv, void *ctx);
 
 static SNLP this_snlp;
 
 // create a new SNLP data structure
-SNLP_API SNLP SNLPNew(int n, int m, int p, void (*fhg)(double *x, double *f, double *h, double *g)) {
+SNLP_API SNLP SNLPNew(int n, int m, int p, void (*fhg)(double *x, double *f, double *h, double *g, void *ctx),
+                      void (*Dfhg)(double *x, double *Df, double **Dh, double **Dg, void *ctx),void *ctx) {
     if (n < 1) {
         RuntimeWarning("SNLPNew(): n < 1: invalid number of parameters");
         return NULL;
@@ -46,7 +47,8 @@ SNLP_API SNLP SNLPNew(int n, int m, int p, void (*fhg)(double *x, double *f, dou
     s->m = m;
     s->p = p;
     s->fhg = fhg;
-    s->Dfhg = NULL;
+    s->Dfhg = Dfhg;
+    s->ctx = ctx;
     s->tolerance = 1.0e-6;
     s->maximum_iterations = 500;
     s->show_progress = NO;
@@ -110,7 +112,7 @@ SNLP_API int SNLPLinfSQP(SNLP s, double *x) {
     return snlp_solve(s, x, 1);
 }
 
-double snlp_fhg(Vector xv, Vector hv, Vector gv) {
+double snlp_fhg(Vector xv, Vector hv, Vector gv, void *ctx) {
     double f;
     double *x = NULL, *h = NULL, *g = NULL;
     x = xv->e;
@@ -120,11 +122,11 @@ double snlp_fhg(Vector xv, Vector hv, Vector gv) {
     if (gv != NULL) {
         g = gv->e;
     }
-    this_snlp->fhg(x, &f, h, g);
+    this_snlp->fhg(x, &f, h, g, ctx);
     return f;
 }
 
-void snlp_dfhg(Vector xv, Vector dfv, Matrix dhv, Matrix dgv) {
+void snlp_dfhg(Vector xv, Vector dfv, Matrix dhv, Matrix dgv, void *ctx) {
     double *x = NULL, *df = NULL, **dh = NULL, **dg = NULL;
     x = xv->e;
     if (dfv != NULL) {
@@ -136,7 +138,7 @@ void snlp_dfhg(Vector xv, Vector dfv, Matrix dhv, Matrix dgv) {
     if (dgv != NULL) {
         dg = dgv->e;
     }
-    this_snlp->Dfhg(x, df, dh, dg);
+    this_snlp->Dfhg(x, df, dh, dg, ctx);
 }
 
 int snlp_solve(SNLP s, double *x_ptr, int method) {
@@ -177,9 +179,9 @@ int snlp_solve(SNLP s, double *x_ptr, int method) {
     
 	NLPStatistics stats;
     if (s->Dfhg == NULL) {
-        stats = NLPsolve(snlp_fhg, NULL, x, lambda, mu, opt);
+        stats = NLPsolve(snlp_fhg, NULL, s->ctx, x, lambda, mu, opt);
     } else {
-        stats = NLPsolve(snlp_fhg, snlp_dfhg, x, lambda, mu, opt);
+        stats = NLPsolve(snlp_fhg, snlp_dfhg, s->ctx, x, lambda, mu, opt);
     }
     
     for (i = 0; i < n; i++) {

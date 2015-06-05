@@ -41,11 +41,12 @@ struct snlp_ {
     int n; // number of parameters
     int m; // number of equality constraints
     int p; // number of inequality constraints
-    void (*fhg)(double *x, double *f, double *h, double *g); // compute f(x), h(x), g(x)
+    void (*fhg)(double *x, double *f, double *h, double *g, void *ctx); // compute f(x), h(x), g(x)
 
     // Optional input
     
-    void (*Dfhg)(double *x, double *Df, double **Dh, double **Dg);  // NULL (default)
+    void (*Dfhg)(double *x, double *Df, double **Dh, double **Dg, void *ctx);  // NULL (default)
+    void *ctx;                                                      // User context
     double tolerance;                                               // 1.0e-6
     int maximum_iterations;                                         // 500
     int show_progress;                                              // NO
@@ -73,7 +74,9 @@ typedef struct snlp_ * SNLP;
 SNLP_API SNLP SNLP_CALL SNLPNew(int n,
              int m,
              int p,
-             void (*fhg)(double *x, double *f, double *h, double *g));
+             void (*fhg)(double *x, double *f, double *h, double *g, void *ctx),
+             void (*Dfhg)(double *x, double *Df, double **Dh, double **Dg, void *ctx),
+             void *ctx);
 SNLP_API void SNLP_CALL SNLPDelete(SNLP s);
 SNLP_API int SNLP_CALL SNLPLinfSQP(SNLP s, double *x);
 SNLP_API int SNLP_CALL SNLPL1SQP(SNLP s, double *x);

@@ -312,12 +312,12 @@ void LinfSQPallocateStorage(LinfSQP a) {
     a->nrelax = 0;
     a->nrefine = 0;
 
-    a->f = a->nlp->fhg(a->x0, a->h, a->g);
+    a->f = a->nlp->fhg(a->x0, a->h, a->g, a->nlp->ctx);
     a->nfun++;
     if (a->fd_gradient == YES) {
-        NLPDfhg(a->nlp, a->x0, a->df, a->dh, a->dg);
+        NLPDfhg(a->nlp, a->x0, a->df, a->dh, a->dg, a->nlp->ctx);
     } else {
-        a->nlp->Dfhg(a->x0, a->df, a->dh, a->dg);
+        a->nlp->Dfhg(a->x0, a->df, a->dh, a->dg, a->nlp->ctx);
     }
     a-> ngrad++;
     VectorSetEqual(a->df0, a->df);
@@ -707,7 +707,7 @@ void LinfSQPlineSearch(LinfSQP a) {
             // x = x0 + alpha * d + alpha^2 * d_soc
             VectorAxpy(a->x, a->alpha * a->alpha, a->d_soc);
         }
-        a->f = a->nlp->fhg(a->x, a->h, a->g);
+        a->f = a->nlp->fhg(a->x, a->h, a->g, a->nlp->ctx);
         a->nfun++;
         a->nh = 0.0;
         a->ng = 0.0;
@@ -748,7 +748,7 @@ void LinfSQPlineSearch(LinfSQP a) {
                 a->do_soc = YES;
                 a->nsoc++;
                 VectorAxpy(a->x, 1, a->d_soc);
-                a->f = a->nlp->fhg(a->x, a->h, a->g);
+                a->f = a->nlp->fhg(a->x, a->h, a->g, a->nlp->ctx);
                 a->nfun++;
                 
                 a->nh = 0;
@@ -858,9 +858,9 @@ void LinfSQPupdate(LinfSQP a) {
         return;
     }    
     if (a->fd_gradient == YES) {
-        NLPDfhg(a->nlp, a->x, a->df, a->dh, a->dg);
+        NLPDfhg(a->nlp, a->x, a->df, a->dh, a->dg, a->nlp->ctx);
     } else {
-        a->nlp->Dfhg(a->x, a->df, a->dh, a->dg);
+        a->nlp->Dfhg(a->x, a->df, a->dh, a->dg, a->nlp->ctx);
     }
     a->ngrad++;
 
