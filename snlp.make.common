@@ -4,10 +4,14 @@ ifdef PETSC_DIR
 		# older than 3.5
 		include ${PETSC_DIR}/lib/petsc/conf/variables
 		include ${PETSC_DIR}/lib/petsc/conf/rules
-	else
+	elif ($(wildcard ${PETSC_DIR}/lib/petsc-conf/.*),)
 		# newer than 3.5
 		include ${PETSC_DIR}/lib/petsc-conf/variables
 		include ${PETSC_DIR}/lib/petsc-conf/rules
+	else
+		# old PETSc
+		include ${PETSC_DIR}/conf/variables
+		include ${PETSC_DIR}/conf/rules
 	endif
 	LIBS := $(PETSC_LIB)
 else
