@@ -19,16 +19,19 @@ endif
 
 
 # usefull variables and commands
-srcfiles := $(wildcard ./src/*.c)
-includefiles:= $(wildcard ./include/*.h)
-allobj := $(wildcard ./obj/*.o)
+srcfiles := $(wildcard src/*.c)
+includefiles:= $(wildcard include/*.h)
+allobj := $(wildcard obj/*.o)
 obj-suffix := o
-OBJ_FILES := $(addprefix obj/,$(notdir $(srcfiles:.c=.$(obj-suffix))))
 LIB_DIR	:= $(rootdir)/lib
 INCLUDE_DIR := $(rootdir)/include
 EXAMPLES_DIR := $(rootdir)/examples
 OBJ_DIR	:= obj
-MKDIR_P:= mkdir -p
+OBJ_FILES := $(addprefix obj/,$(notdir $(srcfiles:.c=.$(obj-suffix))))
+
+MKDIR_P	:= mkdir -p
+EXAMPLE_FILES := $(EXAMPLES_DIR)/example1.c $(EXAMPLES_DIR)/example2.c $(EXAMPLES_DIR)/example2ctx.c
+EXAMPLE_EXECS := $(EXAMPLES_DIR)/example1.out $(EXAMPLES_DIR)/example2.out $(EXAMPLES_DIR)/example2ctx.out
 
 #detect the system type
 ifeq ($(OS),Windows_NT)
