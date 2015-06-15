@@ -4,7 +4,7 @@ ifdef PETSC_DIR
 		# older than 3.5
 		include ${PETSC_DIR}/lib/petsc/conf/variables
 		include ${PETSC_DIR}/lib/petsc/conf/rules
-	elif ($(wildcard ${PETSC_DIR}/lib/petsc-conf/.*),)
+	else ifneq ($(wildcard ${PETSC_DIR}/lib/petsc-conf/.*),)
 		# newer than 3.5
 		include ${PETSC_DIR}/lib/petsc-conf/variables
 		include ${PETSC_DIR}/lib/petsc-conf/rules
@@ -28,7 +28,7 @@ endif
 
 # usefull variables and commands
 srcfiles := $(wildcard src/*.c)
-#srcfiles += $(wildcard src/*.F90)
+f_srcfiles := $(wildcard src/*.F90)
 includefiles:= $(wildcard include/*.h)
 allobj := $(wildcard obj/*.o)
 obj-suffix := o
@@ -37,11 +37,13 @@ INCLUDE_DIR := $(rootdir)/include
 EXAMPLES_DIR := $(rootdir)/examples
 OBJ_DIR	:= obj
 OBJ_FILES := $(addprefix obj/,$(notdir $(srcfiles:.c=.$(obj-suffix))))
+F_OBJ_FILES := $(addprefix obj/,$(notdir $(f_srcfiles:.F90=.$(obj-suffix))))
 
 MKDIR_P	:= mkdir -p
 EXAMPLE_FILES := $(EXAMPLES_DIR)/example1.c $(EXAMPLES_DIR)/example2.c $(EXAMPLES_DIR)/example2ctx.c
 EXAMPLE_EXECS := $(EXAMPLES_DIR)/example1.out $(EXAMPLES_DIR)/example2.out $(EXAMPLES_DIR)/example2ctx.out
-
+F_EXAMPLE_FILES := $(EXAMPLES_DIR)/example1F90.F90
+F_EXAMPLE_EXECS := $(EXAMPLES_DIR)/example1F90.out
 #detect the system type
 ifeq ($(OS),Windows_NT)
 	echo "WINDOWS DETECETED SELF DESTRUCTION IN 10 seconds!!!!"
