@@ -6,43 +6,20 @@ program example1F90
    integer(kind=c_int)  :: n = 2
    integer(kind=c_int)  :: m = 0
    integer(kind=c_int)  :: p = 1
-   type(SNLP)           :: s
-   integer(kind=c_int)  :: exit_code,i
+   type(SNLP),pointer   :: s
+   integer(kind=c_int)  :: exit_code
    real(kind=c_double),dimension(:),pointer  ::x
    
    allocate(x(n))
    x = [-2.9,2.0]
    
-   !s = SNLPNewF90(n,m,p,c_funloc(fhg),c_null_funptr,c_null_ptr)
-   s%n                         = n
-   s%m                         = m
-   s%p                         = p
-   s%fhg                       = c_funloc(fhg)
-   s%Dfhg                      = c_null_funptr
-   s%ctx                       = c_null_ptr
-   s%tolerance                 = 1.e-6
-   s%maximum_iterations        = 500
-   s%show_progress             = 1
-   s%print_function_gradient   = 0
-   s%print_constraint_gradient = 0
-   s%simple_line_search        = 0
-
-   s%f                         = 0
-   s%normc                     = 0
-   s%normT                     = 0
-   s%lambda                    = 0
-   s%mu                        = 0
-   s%number_of_function_calls  = 0
-   s%number_of_gradient_calls  = 0
-   s%number_of_SOC             = 0
-   s%number_of_QP_solves       = 0
-   s%exit_code                 = 0
-
-   exit_code = SNLPL1SQPF90(s,x)
-        
-   write(*,*) "exit code: ", exit_code
-   write(*,*) "x: ", x
-
+   call SNLPNew(s,n,m,p,c_funloc(fhg),c_null_funptr,c_null_ptr)
+   s%show_progress = 1
+   
+   exit_code = SNLPL1SQPF90(s, x)
+   write(*,*) 'exit_code: ',exit_code
+   write(*,*) 'x:         ',x
+   call SNLPDelete(s)
    deallocate(x)
 contains
    subroutine fhg(x,f,h,g,ctx) bind(c)

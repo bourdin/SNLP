@@ -15,7 +15,7 @@ $(targetC): $(OBJ_FILES) gitversion
 
 $(targetF): $(F_OBJ_FILES) gitversion
 	@echo "Linking "$(targetF)"..."
-	@${LIBLD} $(FOBJ_FILES) -I ${OBJ_DIR} -o $@ $(LIBS)
+	@${LIBLD} $(F_OBJ_FILES) -I ${OBJ_DIR} -o $@ $(LIBS)
 
 ${OBJ_DIR}/%.$(obj-suffix): ${rootdir}/src/%.c
 	${CC} ${PETSCCFLAGS} -I $(INCLUDE_DIR) -fPIC -O3 -c -o $@ $<

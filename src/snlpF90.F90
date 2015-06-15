@@ -2,8 +2,16 @@ module SNLP_mod
    use, intrinsic :: iso_c_binding
    implicit NONE
    
-   integer, parameter  :: SNLP_mmax = 10
-   
+!!! Remark that fortran C interoperability does not support assumed size 
+!!! allocatable arrays inside an interoperable derived type
+!!! fortran cannot access the lambda and mu array directly.
+!!! They need to be converted into fortran pointer or allocatable first
+!!!    real(kind=c_double),pointer                    :: lambda(:),mu(:)
+!!!    call c_f_pointer(SNLP%lambda,lambda,[SNLP(m)])
+!!!    call c_f_pointer(SNLP%mu,mu,[SNLP(p)])
+!!! lambda and mu should not be deallocated as it free SNLP%lambda and SNLP%mu.
+!!!
+
    type,bind(C) :: SNLP
       integer(kind=c_int)   :: n  ! number of parameters
       integer(kind=c_int)   :: m  ! number of equality constraints
@@ -22,8 +30,8 @@ module SNLP_mod
       real(kind=c_double)   :: f
       real(kind=c_double)   :: normc
       real(kind=c_double)   :: normT
-      real(kind=c_double),dimension(SNLP_mmax)   :: lambda
-      real(kind=c_double),dimension(SNLP_mmax)   :: mu
+      type(c_ptr)           :: lambda
+      type(c_ptr)           :: mu
       integer(kind=c_int)   :: number_of_iterations
       integer(kind=c_int)   :: number_of_function_calls
       integer(kind=c_int)   :: number_of_gradient_calls
@@ -36,85 +44,88 @@ end module SNLP_mod
 module SNLPF90
    use,intrinsic :: iso_c_binding
    use SNLP_mod
+   Private
+   public :: SNLPNew
+   public :: SNLPDelete
+   public :: SNLPLinfSQPF90
+   public :: SNLPL1SQPF90
+   public  :: SNLP
+   
+   interface
+      function SNLPNew_private(n,m,p,fhg,Dfhg,ctx) bind(c,name='SNLPNew')
+         use,intrinsic ::  iso_c_binding
+         use SNLP_mod
+
+         type(c_ptr)                            :: SNLPNew_private
+         integer(kind=c_int),intent(IN),value   :: n,m,p
+         type(c_funptr),value                   :: fhg,Dfhg
+         type(c_ptr)                            :: ctx
+      end function SNLPNew_private
+   end interface
    
    interface 
-      function SNLPLinfSQPF90(s,x) bind(c,name='SNLPLinfSQP')
+      subroutine SNLPDelete_private(s) bind(c,name='SNLPDelete')
+         use,intrinsic ::  iso_c_binding
+         use SNLP_mod
+         
+         type(c_ptr),value                      :: s
+      end subroutine SNLPDelete_private
+   end interface    
+
+   interface 
+      function SNLPLinfSQP_private(s,x) bind(c,name='SNLPLinfSQP')
          use,intrinsic :: iso_c_binding
          use SNLP_mod
 
-         type(SNLP)                          :: s
-         real(kind=c_double),intent(inout)   :: x(*)
-         integer(kind=c_int)                 :: SNLPLinfSQPF90
-      end function SNLPLinfSQPF90
+         type(c_ptr)                            :: s
+         real(kind=c_double),intent(inout)      :: x(*)
+         integer(kind=c_int)                    :: SNLPLinfSQP_private
+      end function SNLPLinfSQP_private
    end interface   
 
    interface 
-      function SNLPL1SQPF90(s,x) bind(c,name='SNLPL1SQP')
+      function SNLPL1SQP_private(s,x) bind(c,name='SNLPL1SQP')
          use,intrinsic :: iso_c_binding
          use SNLP_mod
 
-         type(SNLP)                          :: s
-         real(kind=c_double),intent(inout)   :: x(*)
-         integer(kind=c_int)                 :: SNLPL1SQPF90
-      end function SNLPL1SQPF90
+         type(c_ptr)                            :: s
+         real(kind=c_double),intent(inout)      :: x(*)
+         integer(kind=c_int)                    :: SNLPL1SQP_private
+      end function SNLPL1SQP_private
    end interface   
 
 Contains
-#undef __FUNCT__ 
-#define __FUNCT__ "SNLPNewF90"
-   function SNLPNewF90(n,m,p,fhg,Dfhg,ctx)
-      integer(kind=c_int)   :: n  ! number of parameters
-      integer(kind=c_int)   :: m  ! number of equality constraints
-      integer(kind=c_int)   :: p  ! number of inequality constraints
-      type(c_funptr)        :: fhg
-      type(c_funptr)        :: Dfhg
-      type(c_ptr)           :: ctx
-      type(SNLP)            :: SNLPF90New
-      
-      if (n < 1) then
-         write(*,*) "SNLPNew(): n < 1: invalid number of parameters"
-         return
-      end if
-      if ((m > n) .OR. (m < 0)) then
-         write(*,*) "SNLPNew(): m < 0 or m > n: invalid number of equality constraints"
-         return
-      end if
-      if (m > SNLP_mmax) then
-         write(*,*) "SNLPNew(): m = ",m," > ",SNLP_mmax, "increase the value of SNLP_mmax in ",__FILE__
-         return
-      end if
-      if (p < 0) then
-         write(*,*) "SNLPNew(): p < 0: invalid number of inequality constraints"
-         return
-      end if
-      !if (fhg == c_null_funptr) then
-      !   write(*,*) "SNLPNew(): NULL pointer to function evaluator"
-      !   SNLPNew = s
-      !   return
-      !end if
-      SNLPF90New%n                         = n
-      SNLPF90New%m                         = m
-      SNLPF90New%p                         = p
-      SNLPF90New%fhg                       = fhg
-      SNLPF90New%Dfhg                      = Dfhg
-      SNLPF90New%ctx                       = ctx
-      SNLPF90New%tolerance                 = 1.e-6
-      SNLPF90New%maximum_iterations        = 500
-      SNLPF90New%show_progress             = 0
-      SNLPF90New%print_function_gradient   = 0
-      SNLPF90New%print_constraint_gradient = 0
-      SNLPF90New%simple_line_search        = 0
+   subroutine SNLPNew(s,n,m,p,fhg,Dfhg,ctx)
+      type(SNLP),pointer,intent(out)         :: s
+      integer(kind=c_int),intent(IN)         :: n,m,p
+      type(c_funptr),value                   :: fhg,Dfhg
+      type(c_ptr)                            :: ctx
 
-      !!! Results
-      SNLPF90New%f                         = 0
-      SNLPF90New%normc                     = 0
-      SNLPF90New%normT                     = 0
-      SNLPF90New%lambda                    = 0
-      SNLPF90New%mu                        = 0
-      SNLPF90New%number_of_function_calls  = 0
-      SNLPF90New%number_of_gradient_calls  = 0
-      SNLPF90New%number_of_SOC             = 0
-      SNLPF90New%number_of_QP_solves       = 0
-      SNLPF90New%exit_code                 = 0
-   end function SNLPNewF90
+      type(c_ptr)                            :: cptr
+      cptr = SNLPNew_private(n,m,p,fhg,Dfhg,ctx)
+      call c_f_pointer(cptr,s)
+   end subroutine SNLPNew
+   
+   subroutine SNLPDelete(s)
+      type(SNLP),pointer,intent(inout)       :: s
+      type(c_ptr)                            :: cptr
+
+      call SNLPDelete_private(c_loc(s))
+   end subroutine SNLPDelete
+   
+   function SNLPLinfSQPF90(s,x)
+      type(SNLP),pointer,intent(in)          :: s
+      real(kind=c_double),intent(inout)      :: x(*)
+      integer(kind=c_int)                    :: SNLPLinfSQPF90
+      
+      SNLPLinfSQPF90 = SNLPLinfSQP_private(c_loc(s),x)
+   end  function SNLPLinfSQPF90
+
+   function SNLPL1SQPF90(s,x)
+      type(SNLP),pointer,intent(in)          :: s
+      real(kind=c_double),intent(inout)      :: x(*)
+      integer(kind=c_int)                    :: SNLPL1SQPF90
+      
+      SNLPL1SQPF90 = SNLPL1SQP_private(c_loc(s),x)
+   end  function SNLPL1SQPF90
 end module SNLPF90
