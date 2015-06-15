@@ -22,8 +22,8 @@ module SNLP_mod
       real(kind=c_double)   :: f
       real(kind=c_double)   :: normc
       real(kind=c_double)   :: normT
-      real(kind=c_double)   :: lambda(SNLP_mmax)
-      real(kind=c_double)   :: mu(SNLP_mmax)
+      real(kind=c_double),dimension(SNLP_mmax)   :: lambda
+      real(kind=c_double),dimension(SNLP_mmax)   :: mu
       integer(kind=c_int)   :: number_of_iterations
       integer(kind=c_int)   :: number_of_function_calls
       integer(kind=c_int)   :: number_of_gradient_calls
@@ -38,34 +38,38 @@ module SNLPF90
    use SNLP_mod
    
    interface 
-      subroutine SNLPLinfSQP(s,x) bind(c)
+      function SNLPLinfSQPF90(s,x) bind(c,name='SNLPLinfSQP')
          use,intrinsic :: iso_c_binding
          use SNLP_mod
+
          type(SNLP)                          :: s
          real(kind=c_double),intent(inout)   :: x(*)
-      end subroutine
+         integer(kind=c_int)                 :: SNLPLinfSQPF90
+      end function SNLPLinfSQPF90
    end interface   
 
    interface 
-      subroutine SNLPL1SQP(s,x) bind(c)
+      function SNLPL1SQPF90(s,x) bind(c,name='SNLPL1SQP')
          use,intrinsic :: iso_c_binding
          use SNLP_mod
+
          type(SNLP)                          :: s
          real(kind=c_double),intent(inout)   :: x(*)
-      end subroutine
+         integer(kind=c_int)                 :: SNLPL1SQPF90
+      end function SNLPL1SQPF90
    end interface   
 
 Contains
 #undef __FUNCT__ 
-#define __FUNCT__ "SNLPF90New"
-   function SNLPF90New(n,m,p,fhg,Dfhg,ctx)
-      type(SNLP)            :: SNLPF90New
+#define __FUNCT__ "SNLPNewF90"
+   function SNLPNewF90(n,m,p,fhg,Dfhg,ctx)
       integer(kind=c_int)   :: n  ! number of parameters
       integer(kind=c_int)   :: m  ! number of equality constraints
       integer(kind=c_int)   :: p  ! number of inequality constraints
       type(c_funptr)        :: fhg
       type(c_funptr)        :: Dfhg
       type(c_ptr)           :: ctx
+      type(SNLP)            :: SNLPF90New
       
       if (n < 1) then
          write(*,*) "SNLPNew(): n < 1: invalid number of parameters"
@@ -76,9 +80,7 @@ Contains
          return
       end if
       if (m > SNLP_mmax) then
-         write(*,100) m,SNLP_mmax,__FILE__
-         100 format("SNLPNew(): m = ",I," > ", I, "increase the value of SNLP_mmax in ",A)
-         !SNLPNew = s
+         write(*,*) "SNLPNew(): m = ",m," > ",SNLP_mmax, "increase the value of SNLP_mmax in ",__FILE__
          return
       end if
       if (p < 0) then
@@ -114,5 +116,5 @@ Contains
       SNLPF90New%number_of_SOC             = 0
       SNLPF90New%number_of_QP_solves       = 0
       SNLPF90New%exit_code                 = 0
-   end function 
+   end function SNLPNewF90
 end module SNLPF90

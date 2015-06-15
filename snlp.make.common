@@ -16,14 +16,19 @@ ifdef PETSC_DIR
 	LIBS := $(PETSC_LIB)
 else
 	LIBS := 
-	CLINKER = cc
-	LD_SHARED = cc
+	CC := gcc
+	CLINKER := gcc
+	FC := gfortran
+	FLINKER := gfortran
+	LD_SHARED := gcc
+	PETSCCFLAGS := ${CFLAGS}
 endif
 # check if we are cloned from a repo
 
 
 # usefull variables and commands
 srcfiles := $(wildcard src/*.c)
+#srcfiles += $(wildcard src/*.F90)
 includefiles:= $(wildcard include/*.h)
 allobj := $(wildcard obj/*.o)
 obj-suffix := o

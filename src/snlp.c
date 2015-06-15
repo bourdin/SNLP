@@ -143,14 +143,14 @@ void snlp_dfhg(Vector xv, Vector dfv, Matrix dhv, Matrix dgv, void *ctx) {
 
 int snlp_solve(SNLP s, double *x_ptr, int method) {
 // TODO: check options set by the user
-    this_snlp = s;
+  this_snlp = s;
 	int n = s->n;
 	int m = s->m;
 	int p = s->p;
 
 	Vector x = NULL;
-    Vector lambda = NULL;
-    Vector mu = NULL;
+  Vector lambda = NULL;
+  Vector mu = NULL;
     
 	x = VectorNew(n);
 	if (m > 0) {

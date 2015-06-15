@@ -43,3 +43,7 @@ cleanexamples:
 	@rm -f $(EXAMPLE_EXECS)
 
 cleanall: clean cleanexamples
+
+debug:
+	-@echo cc is ${CC}
+	-@echo FC is ${FC}
