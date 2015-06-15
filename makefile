@@ -2,8 +2,8 @@
 rootdir = $(realpath .)
 include snlp.make.common
 
-targetC := ${LIB_DIR}/libsnlp.${LIB_SUFFIX}
-targetF := ${LIB_DIR}/libsnlpF90.${LIB_SUFFIX}
+targetC := ${LIB_DIR}/libsnlp-${METHOD}.${LIB_SUFFIX}
+targetF := ${LIB_DIR}/libsnlpF90-${METHOD}.${LIB_SUFFIX}
 
 .PHONY: clean cleanexamples cleanall
 
@@ -11,24 +11,24 @@ all:: directories $(targetC) $(targetF) allexamples
 
 $(targetC): $(OBJ_FILES) gitversion
 	@echo "Linking "$(targetC)"..."
-	@${LIBLD} $(OBJ_FILES) -o $@ $(LIBS)
+	@${LIBLD} ${PETSCCFLAGS} $(OBJ_FILES) -o $@ $(LIBS)
 
 $(targetF): $(F_OBJ_FILES) gitversion
 	@echo "Linking "$(targetF)"..."
-	@${LIBLD} $(F_OBJ_FILES) -I ${OBJ_DIR} -o $@ $(LIBS)
+	@${LIBLD} ${PETSCFFLAGS} $(F_OBJ_FILES) -I ${OBJ_DIR} -o $@ $(LIBS)
 
-${OBJ_DIR}/%.$(obj-suffix): ${rootdir}/src/%.c
-	${CC} ${PETSCCFLAGS} -I $(INCLUDE_DIR) -fPIC -O3 -c -o $@ $<
+${OBJ_DIR}/%.$(METHOD).$(obj-suffix): ${rootdir}/src/%.c
+	${CC} ${PETSCCFLAGS} -I $(INCLUDE_DIR) -g -fPIC -c -o $@ $<
 
-${OBJ_DIR}/%.$(obj-suffix): ${rootdir}/src/%.F90
-	cd ${OBJ_DIR} && ${FC} ${PETSCFFLAGS} -fPIC -O3 -c -o $@ $< && cd ${rootdir}
+${OBJ_DIR}/%.$(METHOD).$(obj-suffix): ${rootdir}/src/%.F90
+	cd ${OBJ_DIR} && ${FC} ${PETSCFFLAGS} -g -fPIC -c -o $@ $< && cd ${rootdir}
 
 ${EXAMPLES_DIR}/%.out: ${EXAMPLES_DIR}/%.c
-	${CC} ${PETSCCFLAGS} -I $(INCLUDE_DIR) -L $(LIB_DIR) -lsnlp -fPIC -O3 -o $@ $<
+	${CC} ${PETSCCFLAGS} -I $(INCLUDE_DIR) -L $(LIB_DIR) -lsnlp-${METHOD} -fPIC -o $@ $<
 
 ${EXAMPLES_DIR}/%.out: ${EXAMPLES_DIR}/%.F90
 	cd ${EXAMPLES_DIR}
-	${FC} ${PETSCFFLAGS} -I $(OBJ_DIR) -L $(LIB_DIR) -lsnlp -lsnlpF90 -fPIC -O3 -o $@ $<
+	${FC} ${PETSCFFLAGS} -I $(OBJ_DIR) -L $(LIB_DIR) -lsnlp-${METHOD} -lsnlpF90-${METHOD} -fPIC -o $@ $<
 	cd ${rootdir}
 
 gitversion:
@@ -55,8 +55,7 @@ cleanall: clean cleanexamples
 	
 clean::
 	@rm -f src/gitversion.c
-	@rm -f $(OBJ_FILES)
-	@rm -f $(F_OBJ_FILES)
+	@rm -f $(allobj)
 	@rm -f $(targetC)
 	@rm -f $(targetF)
 	@rm -f $(modfiles)

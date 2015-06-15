@@ -24,6 +24,17 @@ else
 	PETSCCFLAGS := ${CFLAGS}
 endif
 
+ifndef METHOD
+	METHOD := dbg
+endif
+
+ifeq (METHOD,dbg)
+	PETSCCFLAGS += -g
+	PETSCFFLAGS += -g
+else ifeq (METHOD,opt)
+	PETSCCFLAGS += -O3
+	PETSCFFLAGS += -O3
+endif
 # usefull variables and commands
 srcfiles := $(wildcard src/*.c)
 f_srcfiles := $(wildcard src/*.F90)
@@ -35,8 +46,8 @@ LIB_DIR	:= $(rootdir)/lib
 INCLUDE_DIR := $(rootdir)/include
 EXAMPLES_DIR := $(rootdir)/examples
 OBJ_DIR	:= ${rootdir}/obj
-OBJ_FILES := $(addprefix ${OBJ_DIR}/,$(notdir $(srcfiles:.c=.$(obj-suffix))))
-F_OBJ_FILES := $(addprefix ${OBJ_DIR}/,$(notdir $(f_srcfiles:.F90=.$(obj-suffix))))
+OBJ_FILES := $(addprefix ${OBJ_DIR}/,$(notdir $(srcfiles:.c=.$(METHOD).$(obj-suffix))))
+F_OBJ_FILES := $(addprefix ${OBJ_DIR}/,$(notdir $(f_srcfiles:.F90=.$(METHOD).$(obj-suffix))))
 
 MKDIR_P	:= mkdir -p
 EXAMPLE_FILES := $(EXAMPLES_DIR)/example1.c $(EXAMPLES_DIR)/example2.c $(EXAMPLES_DIR)/example2ctx.c
