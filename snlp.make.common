@@ -23,21 +23,20 @@ else
 	LD_SHARED := gcc
 	PETSCCFLAGS := ${CFLAGS}
 endif
-# check if we are cloned from a repo
-
 
 # usefull variables and commands
 srcfiles := $(wildcard src/*.c)
 f_srcfiles := $(wildcard src/*.F90)
 includefiles:= $(wildcard include/*.h)
 allobj := $(wildcard obj/*.o)
+modfiles := $(wildcard obj/*.mod)
 obj-suffix := o
 LIB_DIR	:= $(rootdir)/lib
 INCLUDE_DIR := $(rootdir)/include
 EXAMPLES_DIR := $(rootdir)/examples
-OBJ_DIR	:= obj
-OBJ_FILES := $(addprefix obj/,$(notdir $(srcfiles:.c=.$(obj-suffix))))
-F_OBJ_FILES := $(addprefix obj/,$(notdir $(f_srcfiles:.F90=.$(obj-suffix))))
+OBJ_DIR	:= ${rootdir}/obj
+OBJ_FILES := $(addprefix ${OBJ_DIR}/,$(notdir $(srcfiles:.c=.$(obj-suffix))))
+F_OBJ_FILES := $(addprefix ${OBJ_DIR}/,$(notdir $(f_srcfiles:.F90=.$(obj-suffix))))
 
 MKDIR_P	:= mkdir -p
 EXAMPLE_FILES := $(EXAMPLES_DIR)/example1.c $(EXAMPLES_DIR)/example2.c $(EXAMPLES_DIR)/example2ctx.c
