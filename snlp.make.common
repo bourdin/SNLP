@@ -1,4 +1,4 @@
-ifdef PETSC_DIR
+ifneq (PETSC_DIR,)
 	#import PETSc rules and variables
 	ifneq ($(wildcard ${PETSC_DIR}/lib/petsc/conf/.*),)
 		# older than 3.5
@@ -51,9 +51,9 @@ F_OBJ_FILES := $(addprefix ${OBJ_DIR}/,$(notdir $(f_srcfiles:.F90=.$(METHOD).$(o
 
 MKDIR_P	:= mkdir -p
 EXAMPLE_FILES := $(EXAMPLES_DIR)/example1.c $(EXAMPLES_DIR)/example2.c $(EXAMPLES_DIR)/example2ctx.c
-EXAMPLE_EXECS := $(EXAMPLES_DIR)/example1.out $(EXAMPLES_DIR)/example2.out $(EXAMPLES_DIR)/example2ctx.out
+EXAMPLE_EXECS := $(EXAMPLES_DIR)/example1 $(EXAMPLES_DIR)/example2 $(EXAMPLES_DIR)/example2ctx
 F_EXAMPLE_FILES := $(EXAMPLES_DIR)/example1F90.F90
-F_EXAMPLE_EXECS := $(EXAMPLES_DIR)/example1F90.out
+F_EXAMPLE_EXECS := $(EXAMPLES_DIR)/example1F90
 #detect the system type
 ifeq ($(OS),Windows_NT)
 	echo "WINDOWS DETECETED SELF DESTRUCTION IN 10 seconds!!!!"
