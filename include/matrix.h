@@ -21,6 +21,7 @@ struct matrix_ {
     int     r;   // number of rows
     int     c;   // number of columns
     double  **e; // elements
+    double  *stash;
 };
 
 #define MAT(x,i,j) x->e[i][j]

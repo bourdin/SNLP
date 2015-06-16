@@ -53,9 +53,7 @@ void MatrixDelete(Matrix m) {
     if (m == NULL) {
         return;
     }
-    for (i = 0; i < m->r; i++) {
-        free(m->e[i]);
-    }
+    free(m->stash);
     free(m->e);
     free(m);
     _matrix_allocated_--;
@@ -269,9 +267,11 @@ Matrix MatrixNew(int r, int c) {
     m = (Matrix) malloc(sizeof (struct matrix_));
     m->r = r;
     m->c = c;
-    m->e = (double **) malloc(r * sizeof (double *));
+    //m->e = (double **) malloc(r * sizeof (double *));
+    m->stash = (double *) calloc(r*c,sizeof (double *));
+    m->e = (double **) malloc(r * sizeof (double));
     for (i = 0; i < r; i++) {
-        m->e[i] = (double *) calloc(c, sizeof (double));
+        m->e[i] = &(m->stash[i*c]);
     }
     _matrix_allocated_++;
     return m;
@@ -397,11 +397,8 @@ void MatrixSet(Matrix m, int i, int j, double x) {
 void MatrixSetAllTo(Matrix m, double x) {
     int i, j;
     double *mi;
-    for (i = 0; i < m->r; i++) {
-        mi = m->e[i];
-        for (j = 0; j < m->c; j++) {
-            mi[j] = x;
-        }
+    for (i = 0; i < m->r*m->c; i++) {
+        m->stash[i] = x;
     }
 }
 
@@ -414,6 +411,7 @@ void MatrixSetEqual(Matrix a, Matrix b) {
             RuntimeError("MatrixSetEqual: invalid dimensions");
         }
     for (i = 0; i < a->r; i++) {
+    // with the new sequential storage, one could use memcopy here
         ai = a->e[i];
         bi = b->e[i];
         for (j = 0; j < a->c; j++) {
