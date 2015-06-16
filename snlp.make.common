@@ -1,4 +1,4 @@
-ifneq (PETSC_DIR,)
+ifneq (${PETSC_DIR},)
 	#import PETSc rules and variables
 	ifneq ($(wildcard ${PETSC_DIR}/lib/petsc/conf/.*),)
 		# older than 3.5
