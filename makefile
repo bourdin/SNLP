@@ -27,7 +27,7 @@ ${EXAMPLES_DIR}/%: $(targetC) ${EXAMPLES_DIR}/%.c
 	${CC} ${PETSCCFLAGS} -I $(INCLUDE_DIR) -L $(LIB_DIR) -lsnlp.${METHOD} -fPIC -o $@ $(word 2,$^)
 
 ${EXAMPLES_DIR}/%: $(targetC) $(targetF) ${EXAMPLES_DIR}/%.F90
-	cd ${EXAMPLES_DIR} && ${FLINKER} ${PETSCFFLAGS} -I$(OBJ_DIR) -L $(LIB_DIR) -lsnlp.${METHOD} -lsnlpF90.${METHOD} -fPIC -o $@ $(word 3,$^) $(OBJ_DIR)/snlpF90.$(METHOD).o && cd ${rootdir}
+	cd ${EXAMPLES_DIR} && ${FLINKER} ${PETSCFFLAGS} -I$(OBJ_DIR) -L $(LIB_DIR) -lsnlp.${METHOD} -lsnlpF90.${METHOD} -fPIC -o $@ $(word 3,$^) && cd ${rootdir}
 
 gitversion:
 	@python checkgit.py $(rootdir)
