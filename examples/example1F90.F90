@@ -1,6 +1,23 @@
+module example1F90_mod
+
+contains
+   subroutine fhg(x,f,h,g,ctx) bind(c)
+      use,intrinsic :: iso_c_binding
+      real(kind=c_double)   :: x(*)
+      real(kind=c_double)   :: f(*)
+      real(kind=c_double)   :: h(*)
+      real(kind=c_double)   :: g(*)
+      type(c_ptr)           :: ctx
+      
+      f(1) = 100.0*(x(2)-x(1)*x(1))*(x(2)-x(1)*x(1)) + (1-x(1))*(1-x(1));
+      g(1) = x(1)*x(1) + x(2)*x(2) - 1.5
+   end subroutine fhg
+end module example1F90_mod
+
 program example1F90
    use,intrinsic :: iso_c_binding
    use SNLPF90
+   use example1F90_mod
    implicit NONE
    
    integer(kind=c_int)  :: n = 2
@@ -21,15 +38,4 @@ program example1F90
    write(*,*) 'x:         ',x
    call SNLPDelete(s)
    deallocate(x)
-contains
-   subroutine fhg(x,f,h,g,ctx)
-      real(kind=c_double)   :: x(*)
-      real(kind=c_double)   :: f(*)
-      real(kind=c_double)   :: h(*)
-      real(kind=c_double)   :: g(*)
-      type(c_ptr)           :: ctx
-      
-      f(1) = 100.0*(x(2)-x(1)*x(1))*(x(2)-x(1)*x(1)) + (1-x(1))*(1-x(1));
-      g(1) = x(1)*x(1) + x(2)*x(2) - 1.5
-   end subroutine fhg
 end program example1F90
