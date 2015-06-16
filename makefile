@@ -2,8 +2,8 @@
 rootdir = $(realpath .)
 include snlp.make.common
 
-targetC := ${LIB_DIR}/libsnlp-${METHOD}.${LIB_SUFFIX}
-targetF := ${LIB_DIR}/libsnlpF90-${METHOD}.${LIB_SUFFIX}
+targetC := ${LIB_DIR}/libsnlp.${METHOD}.${LIB_SUFFIX}
+targetF := ${LIB_DIR}/libsnlpF90.${METHOD}.${LIB_SUFFIX}
 
 .PHONY: clean cleanexamples cleanall
 
@@ -11,11 +11,11 @@ all:: directories $(targetC) $(targetF) allexamples
 
 $(targetC): directories $(OBJ_FILES) gitversion
 	@echo "Linking "$(targetC)"..."
-	@${LIBLD} ${PETSCCFLAGS} $(OBJ_FILES) -o $@ $(LIBS)
+	@${LIBLDC} ${PETSCCFLAGS} ${LDFLAGS} $(OBJ_FILES) -o $@ $(LIBS)
 
 $(targetF): directories $(F_OBJ_FILES) gitversion
 	@echo "Linking "$(targetF)"..."
-	@${LIBLD} ${PETSCFFLAGS} $(F_OBJ_FILES) -I ${OBJ_DIR} -o $@ $(LIBS)
+	@${LIBLDF} ${PETSCFFLAGS} ${LDFLAGS} $(F_OBJ_FILES) -I ${OBJ_DIR} -o $@ $(LIBS)
 
 ${OBJ_DIR}/%.$(METHOD).$(obj-suffix): ${rootdir}/src/%.c
 	${CC} ${PETSCCFLAGS} -I $(INCLUDE_DIR) -g -fPIC -c -o $@ $<
@@ -24,12 +24,10 @@ ${OBJ_DIR}/%.$(METHOD).$(obj-suffix): ${rootdir}/src/%.F90
 	cd ${OBJ_DIR} && ${FC} ${PETSCFFLAGS} -g -fPIC -c -o $@ $< && cd ${rootdir}
 
 ${EXAMPLES_DIR}/%: $(targetC) ${EXAMPLES_DIR}/%.c
-	${CC} ${PETSCCFLAGS} -I $(INCLUDE_DIR) -L $(LIB_DIR) -lsnlp-${METHOD} -fPIC -o $@ $(word 2,$^)
+	${CC} ${PETSCCFLAGS} -I $(INCLUDE_DIR) -L $(LIB_DIR) -lsnlp.${METHOD} -fPIC -o $@ $(word 2,$^)
 
-${EXAMPLES_DIR}/%: $(targetC) $(targetF) ${EXAMPLES_DIR}/%.F90 
-	cd ${EXAMPLES_DIR}
-	${FC} ${PETSCFFLAGS} -I $(OBJ_DIR) -L $(LIB_DIR) -lsnlp-${METHOD} -lsnlpF90-${METHOD} -fPIC -o $@ $(word 3,$^)
-	cd ${rootdir}
+${EXAMPLES_DIR}/%: $(targetC) $(targetF) ${EXAMPLES_DIR}/%.F90
+	cd ${EXAMPLES_DIR} && ${FLINKER} ${PETSCFFLAGS} -I$(OBJ_DIR) -L $(LIB_DIR) -lsnlp.${METHOD} -lsnlpF90.${METHOD} -fPIC -o $@ $(word 3,$^) $(OBJ_DIR)/snlpF90.$(METHOD).o && cd ${rootdir}
 
 gitversion:
 	@python checkgit.py $(rootdir)

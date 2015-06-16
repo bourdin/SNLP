@@ -14,14 +14,19 @@ ifneq (${PETSC_DIR},)
 		include ${PETSC_DIR}/conf/rules
 	endif
 	LIBS := $(PETSC_LIB)
+	LD_SHARED_F := ${LD_SHARED}
+	LD_SHARED_C := ${LD_SHARED}
 else
 	LIBS := 
 	CC := gcc
 	CLINKER := gcc
-	FC := gfortran
+	FC := gfortran 
 	FLINKER := gfortran
-	LD_SHARED := gcc
+	LD_SHARED_F := gcc
+	LD_SHARED_C := gfortran
 	PETSCCFLAGS := ${CFLAGS}
+	PETSCCFLAGS := ${FFLAGS}
+	LDFLAGS := -lm
 endif
 
 ifndef METHOD
@@ -59,12 +64,16 @@ ifeq ($(OS),Windows_NT)
 	echo "WINDOWS DETECETED SELF DESTRUCTION IN 10 seconds!!!!"
 else
 	UNAME_S := $(shell uname -s)
-	ifeq ($(UNAME_S),Linux)
+	ifeq (${UNAME_S},Linux)
 		LIB_SUFFIX := so
-		LIBLD := ${CLINKER} -shared -Wl,-soname,snlp.${LIB_SUFFIX}
+		LDFLAGS +=  -shared #-Wl,-soname,libsnlp.${METHOD}.${LIB_SUFFIX}
+		LIBLDC := ${CLINKER}
+		LIBLDF := ${FLINKER}
 	endif
-	ifeq ($(UNAME_S),Darwin)
-		LIBLD := ${LD_SHARED} -g -dynamiclib -single_module -multiply_defined suppress -undefined dynamic_lookup ${DARWIN_COMMONS_USE_DYLIBS}
+	ifeq (${UNAME_S},Darwin)
+		LDFLAGS += -g -dynamiclib -single_module -multiply_defined suppress -undefined dynamic_lookup ${DARWIN_COMMONS_USE_DYLIBS}
+		LIBLDC := ${LD_SHARED_C}
+		LIBLDF := ${LD_SHARED_F} 
 		LIB_SUFFIX = dylib
 	endif
 endif
