@@ -77,7 +77,7 @@ module SNLPF90
          use,intrinsic :: iso_c_binding
          use SNLP_mod
 
-         type(c_ptr)                            :: s
+         type(c_ptr),value                      :: s
          real(kind=c_double),intent(inout)      :: x(*)
          integer(kind=c_int)                    :: SNLPLinfSQP_private
       end function SNLPLinfSQP_private
@@ -88,7 +88,7 @@ module SNLPF90
          use,intrinsic :: iso_c_binding
          use SNLP_mod
 
-         type(c_ptr)                            :: s
+         type(c_ptr),value                      :: s
          real(kind=c_double),intent(inout)      :: x(*)
          integer(kind=c_int)                    :: SNLPL1SQP_private
       end function SNLPL1SQP_private

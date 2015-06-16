@@ -22,7 +22,7 @@ program example1F90
    call SNLPDelete(s)
    deallocate(x)
 contains
-   subroutine fhg(x,f,h,g,ctx) bind(c)
+   subroutine fhg(x,f,h,g,ctx)
       real(kind=c_double)   :: x(*)
       real(kind=c_double)   :: f(*)
       real(kind=c_double)   :: h(*)
