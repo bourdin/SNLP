@@ -57,8 +57,8 @@ F_OBJ_FILES := $(addprefix ${OBJ_DIR}/,$(notdir $(f_srcfiles:.F90=.$(METHOD).$(o
 MKDIR_P	:= mkdir -p
 EXAMPLE_FILES := $(EXAMPLES_DIR)/example1.c $(EXAMPLES_DIR)/example2.c $(EXAMPLES_DIR)/example2ctx.c
 EXAMPLE_EXECS := $(EXAMPLES_DIR)/example1 $(EXAMPLES_DIR)/example2 $(EXAMPLES_DIR)/example2ctx
-F_EXAMPLE_FILES := $(EXAMPLES_DIR)/example1F90.F90
-F_EXAMPLE_EXECS := $(EXAMPLES_DIR)/example1F90
+F_EXAMPLE_FILES := $(EXAMPLES_DIR)/example1F90.F90  $(EXAMPLES_DIR)/example1F90ctx.F90
+F_EXAMPLE_EXECS := $(EXAMPLES_DIR)/example1F90  $(EXAMPLES_DIR)/example1F90ctx
 #detect the system type
 ifeq ($(OS),Windows_NT)
 	echo "WINDOWS DETECETED SELF DESTRUCTION IN 10 seconds!!!!"

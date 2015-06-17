@@ -47,9 +47,9 @@ module SNLPF90
    Private
    public :: SNLPNew
    public :: SNLPDelete
-   public :: SNLPLinfSQPF90
-   public :: SNLPL1SQPF90
-   public  :: SNLP
+   public :: SNLPLinfSQP
+   public :: SNLPL1SQP
+   public :: SNLP
    
    interface
       function SNLPNew_private(n,m,p,fhg,Dfhg,ctx) bind(c,name='SNLPNew')
@@ -59,7 +59,7 @@ module SNLPF90
          type(c_ptr)                            :: SNLPNew_private
          integer(kind=c_int),intent(IN),value   :: n,m,p
          type(c_funptr),value                   :: fhg,Dfhg
-         type(c_ptr)                            :: ctx
+         type(c_ptr),value                      :: ctx
       end function SNLPNew_private
    end interface
    
@@ -73,27 +73,26 @@ module SNLPF90
    end interface    
 
    interface 
-      function SNLPLinfSQP_private(s,x) bind(c,name='SNLPLinfSQP')
+      function SNLPL1SQP(s,x) bind(c,name='SNLPL1SQP')
          use,intrinsic :: iso_c_binding
          use SNLP_mod
 
-         type(c_ptr),value                      :: s
+         type(SNLP)                      :: s
          real(kind=c_double),intent(inout)      :: x(*)
-         integer(kind=c_int)                    :: SNLPLinfSQP_private
-      end function SNLPLinfSQP_private
+         integer(kind=c_int)                    :: SNLPL1SQP
+      end function SNLPL1SQP
    end interface   
 
    interface 
-      function SNLPL1SQP_private(s,x) bind(c,name='SNLPL1SQP')
+      function SNLPLinfSQP(s,x) bind(c,name='SNLPLinfSQP')
          use,intrinsic :: iso_c_binding
          use SNLP_mod
 
-         type(c_ptr),value                      :: s
+         type(SNLP)                      :: s
          real(kind=c_double),intent(inout)      :: x(*)
-         integer(kind=c_int)                    :: SNLPL1SQP_private
-      end function SNLPL1SQP_private
+         integer(kind=c_int)                    :: SNLPLinfSQP
+      end function SNLPLinfSQP
    end interface   
-
 Contains
    subroutine SNLPNew(s,n,m,p,fhg,Dfhg,ctx)
       type(SNLP),pointer,intent(out)         :: s
@@ -112,20 +111,4 @@ Contains
 
       call SNLPDelete_private(c_loc(s))
    end subroutine SNLPDelete
-   
-   function SNLPLinfSQPF90(s,x)
-      type(SNLP),pointer,intent(in)          :: s
-      real(kind=c_double),intent(inout)      :: x(*)
-      integer(kind=c_int)                    :: SNLPLinfSQPF90
-      
-      SNLPLinfSQPF90 = SNLPLinfSQP_private(c_loc(s),x)
-   end  function SNLPLinfSQPF90
-
-   function SNLPL1SQPF90(s,x)
-      type(SNLP),pointer,intent(in)          :: s
-      real(kind=c_double),intent(inout)      :: x(*)
-      integer(kind=c_int)                    :: SNLPL1SQPF90
-      
-      SNLPL1SQPF90 = SNLPL1SQP_private(c_loc(s),x)
-   end  function SNLPL1SQPF90
 end module SNLPF90

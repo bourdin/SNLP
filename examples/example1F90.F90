@@ -33,7 +33,7 @@ program example1F90
    call SNLPNew(s,n,m,p,c_funloc(fhg),c_null_funptr,c_null_ptr)
    s%show_progress = 1
    
-   exit_code = SNLPL1SQPF90(s, x)
+   exit_code = SNLPL1SQP(s, x)
    write(*,*) 'exit_code: ',exit_code
    write(*,*) 'x:         ',x
    call SNLPDelete(s)
