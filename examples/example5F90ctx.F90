@@ -54,12 +54,12 @@ contains
       !!! remember that fortran uses column-major ordering whereas C uses row-major ordering
       !!! so that we need to compute Dg^t instead of Dg
       call c_f_pointer(Dg,Dgptr,[3,6])
-      Dgptr(1,1) = 1.;  Dgptr(2,1) = -1.; Dgptr(3,1) = 0.
-      Dgptr(1,2) = -1.; Dgptr(2,2) = 1.;  Dgptr(3,2) = 0.
-      Dgptr(1,3) = 1.;  Dgptr(2,3) = 0.;  Dgptr(3,3) = -1.
-      Dgptr(1,4) = -1.; Dgptr(2,4) = 0.;  Dgptr(3,4) = 1.
-      Dgptr(1,5) = 0.;  Dgptr(2,5) = 1.;  Dgptr(3,5) = -1.
-      Dgptr(1,6) = 0.;  Dgptr(2,6) = -1.; Dgptr(3,6) = 1.
+      Dgptr(1:3,1) = [1., -1.,  0.]
+      Dgptr(1:3,2) = [-1., 1.,  0.]
+      Dgptr(1:3,3) = [1.,  0., -1.]
+      Dgptr(1:3,4) = [-1., 0.,  1.]
+      Dgptr(1:3,5) = [0.,  1., -1.]
+      Dgptr(1:3,6) = [0., -1.,  1.]
 
    end subroutine Dfhg
 end module example5F90_mod
