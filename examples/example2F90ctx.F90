@@ -16,15 +16,31 @@ contains
       type(c_ptr),intent(in),value  :: myctx
       type(ctx),pointer             :: myctx_ptr
 
-      !!! This is the fortran equivalent of casting myctx into a c_ptr
+      !!! This is the fortran equivalent of casting ctx into a c_ptr
       call c_f_pointer(myctx,myctx_ptr)      
       
-      !write(*,*) "this is fhg"
-      !write(*,*) 'myctx_ptr%a,myctx_ptr%b ',myctx_ptr%a,c_ptr%b
-      !write(*,*) 'myctx_ptr%array      ',myctx_ptr%array
       f(1) = myctx_ptr%b * (x(2)-x(1)**2)**2 + (1.-x(1))**2
       g(1) = x(1)**2 + x(2)**2 - 1.5
    end subroutine fhg
+
+   subroutine Dfhg(x,Df,Dh,Dg,myctx) bind(c)
+      use,intrinsic :: iso_c_binding
+      real(kind=c_double)           :: x(*)
+      real(kind=c_double)           :: Df(*)
+      type(c_ptr)                   :: Dh
+      type(c_ptr)                   :: Dg
+      type(c_ptr),value             :: myctx
+      type(ctx),pointer             :: myctx_ptr
+
+      real(kind=c_double),dimension(:,:), pointer  :: Dgptr      
+
+      Df(1) = -2. * myctx_ptr%b * x(1)*(x(2)-x(1)**2) - 2.0*(1.-x(1));
+      Df(2) = myctx_ptr%b*(x(2)-x(1)**2);
+
+      call c_f_pointer(Dg,Dgptr,[1,2])
+      Dgptr(1,1) = 2.0*x(1);
+      Dgptr(1,2) = 2.0*x(2);
+   end subroutine Dfhg
 end module example1F90_mod
 
 program example1F90
@@ -40,20 +56,19 @@ program example1F90
    integer              :: i,j
    integer(kind=c_int)  :: exit_code
    real(kind=c_double),dimension(:),pointer  ::x
-   type(ctx),target     :: myctx
+   type(ctx),target     :: ctx_ptr
    
-   myctx%a = 1.
-   myctx%b = 100.
-   allocate(myctx%array(2,3))
+   ctx_ptr%a = 1.
+   ctx_ptr%b = 100.
+   allocate(ctx_ptr%array(2,3))
    do i = 1,2
-      do j = 1,3
-         myctx%array(i,j) = 100*i+j
-      end do
+      ctx_ptr%array(i,:) = [(100*i+j, j = 1, 3)]
    end do
+   write(*,*) ctx_ptr%array
    allocate(x(n))
    x = [-2.9,2.0]
    
-   call SNLPNew(s,n,m,p,c_funloc(fhg),c_null_funptr,c_loc(myctx))
+   call SNLPNew(s,n,m,p,c_funloc(fhg),c_null_funptr,c_loc(ctx_ptr))
    s%show_progress = 1
    
    exit_code = SNLPL1SQP(s,x)

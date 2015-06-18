@@ -9,8 +9,8 @@ contains
       real(kind=c_double)   :: g(*)
       type(c_ptr)           :: ctx
       
-      f(1) = 100.0*(x(2)-x(1)*x(1))*(x(2)-x(1)*x(1)) + (1-x(1))*(1-x(1));
-      g(1) = x(1)*x(1) + x(2)*x(2) - 1.5
+      f(1) = 100.0 * (x(2)-x(1)**2)**2 + (1.-x(1))**2
+      g(1) = x(1)**2 + x(2)**2 - 1.5
    end subroutine fhg
 end module example1F90_mod
 
