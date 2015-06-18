@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "snlp.h"
 
-void fhg(double *x, double *f, double *h, double *g) {
+void fhg(double *x, double *f, double *h, double *g, void *ctx) {
 	double x4 = x[3];
 	double x3 = x[2];
 	double x2 = x[1];
@@ -45,7 +45,7 @@ int main() {
 	x[4] = 0;
 	x[5] = 2;
     
-	s = SNLPNew(n, m, p, fhg);
+	s = SNLPNew(n, m, p, fhg, NULL,NULL);
 	s->show_progress = 1;
 	exit_code = SNLPL1SQP(s, x);
     

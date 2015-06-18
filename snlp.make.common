@@ -56,10 +56,27 @@ OBJ_FILES := $(addprefix ${OBJ_DIR}/,$(notdir $(srcfiles:.c=.$(METHOD).$(obj-suf
 F_OBJ_FILES := $(addprefix ${OBJ_DIR}/,$(notdir $(f_srcfiles:.F90=.$(METHOD).$(obj-suffix))))
 
 MKDIR_P	:= mkdir -p
-EXAMPLE_FILES := $(EXAMPLES_DIR)/example1.c $(EXAMPLES_DIR)/example2.c $(EXAMPLES_DIR)/example2ctx.c
-EXAMPLE_EXECS := $(EXAMPLES_DIR)/example1 $(EXAMPLES_DIR)/example2 $(EXAMPLES_DIR)/example2ctx
-F_EXAMPLE_FILES := $(EXAMPLES_DIR)/example1F90.F90  $(EXAMPLES_DIR)/example1F90ctx.F90 $(EXAMPLES_DIR)/example2F90.F90 $(EXAMPLES_DIR)/example2F90ctx.F90
-F_EXAMPLE_EXECS := $(EXAMPLES_DIR)/example1F90  $(EXAMPLES_DIR)/example1F90ctx $(EXAMPLES_DIR)/example2F90 $(EXAMPLES_DIR)/example2F90ctx
+EXAMPLE_FILES := $(EXAMPLES_DIR)/example1.c 
+EXAMPLE_FILES += $(EXAMPLES_DIR)/example2.c $(EXAMPLES_DIR)/example2ctx.c
+EXAMPLE_FILES += $(EXAMPLES_DIR)/example3.c 
+EXAMPLE_FILES += $(EXAMPLES_DIR)/example4.c 
+EXAMPLE_FILES += $(EXAMPLES_DIR)/example5.c 
+EXAMPLE_EXECS := $(EXAMPLES_DIR)/example1 
+EXAMPLE_EXECS += $(EXAMPLES_DIR)/example2 $(EXAMPLES_DIR)/example2ctx
+EXAMPLE_EXECS += $(EXAMPLES_DIR)/example3 
+EXAMPLE_EXECS += $(EXAMPLES_DIR)/example4
+EXAMPLE_EXECS += $(EXAMPLES_DIR)/example5
+F_EXAMPLE_FILES := $(EXAMPLES_DIR)/example1F90.F90 $(EXAMPLES_DIR)/example1F90ctx.F90  
+F_EXAMPLE_FILES += $(EXAMPLES_DIR)/example2F90.F90 $(EXAMPLES_DIR)/example2F90ctx.F90
+F_EXAMPLE_FILES += $(EXAMPLES_DIR)/example3F90.F90
+F_EXAMPLE_FILES += $(EXAMPLES_DIR)/example4F90.F90
+#F_EXAMPLE_FILES += $(EXAMPLES_DIR)/example5F90.F90
+F_EXAMPLE_EXECS := $(EXAMPLES_DIR)/example1F90 $(EXAMPLES_DIR)/example1F90ctx
+F_EXAMPLE_EXECS += $(EXAMPLES_DIR)/example2F90 $(EXAMPLES_DIR)/example2F90ctx
+F_EXAMPLE_EXECS += $(EXAMPLES_DIR)/example3F90 
+F_EXAMPLE_EXECS += $(EXAMPLES_DIR)/example4F90 
+#F_EXAMPLE_EXECS += $(EXAMPLES_DIR)/example5F90 
+
 #detect the system type
 ifeq ($(OS),Windows_NT)
 	echo "WINDOWS DETECETED SELF DESTRUCTION IN 10 seconds!!!!"
