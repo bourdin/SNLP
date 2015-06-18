@@ -1,4 +1,4 @@
-module example1F90_mod
+module example4F90_mod
 
 contains
    subroutine fhg(x,f,h,g,ctx) bind(c)
@@ -18,12 +18,12 @@ contains
                 x(3) + x(6) - 2.]
       g(1:8) = [-x(1), x(1) - 1., -x(2), -x(3), -x(4), x(4)-1., -x(5), -x(6)]
    end subroutine fhg
-end module example1F90_mod
+end module example4F90_mod
 
-program example1F90
+program example4F90
    use,intrinsic :: iso_c_binding
    use SNLPF90
-   use example1F90_mod
+   use example4F90_mod
    implicit NONE
    
    integer(kind=c_int)  :: n = 6
@@ -48,4 +48,4 @@ program example1F90
    write(*,*) 'x:         ',x
    call SNLPDelete(s)
    deallocate(x)
-end program example1F90
+end program example4F90

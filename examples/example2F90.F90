@@ -1,4 +1,4 @@
-module example1F90_mod
+module example2F90_mod
 
 contains
    subroutine fhg(x,f,h,g,ctx) bind(c)
@@ -30,12 +30,12 @@ contains
       Dgptr(1,1) = 2.0*x(1);
       Dgptr(1,2) = 2.0*x(2);
    end subroutine Dfhg
-end module example1F90_mod
+end module example2F90_mod
 
-program example1F90
+program example2F90
    use,intrinsic :: iso_c_binding
    use SNLPF90
-   use example1F90_mod
+   use example2F90_mod
    implicit NONE
    
    integer(kind=c_int)  :: n = 2
@@ -56,4 +56,4 @@ program example1F90
    write(*,*) 'x:         ',x
    call SNLPDelete(s)
    deallocate(x)
-end program example1F90
+end program example2F90

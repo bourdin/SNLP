@@ -58,9 +58,6 @@ int main() {
     double *x = NULL;
     x = (double *)calloc(n, sizeof(double));
     
-    x[0] = -2.9;
-    x[1] = 2.0;
-
     ctx.A[0] = 1.;  ctx.A[1] = 2.; ctx.A[2] = 5.;
     ctx.p[0] = -1.; ctx.p[1] = 2.; ctx.p[2] = -5.;
     ctx.sigmac = 1.;

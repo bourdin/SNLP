@@ -27,7 +27,7 @@ contains
    end subroutine fhg
 end module example1F90_mod
 
-program example1F90
+program example1F90ctx
    use,intrinsic :: iso_c_binding
    use SNLPF90
    use example1F90_mod
@@ -62,4 +62,4 @@ program example1F90
    call SNLPDelete(s)
    deallocate(x)
 
-end program example1F90
+end program example1F90ctx
