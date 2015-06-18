@@ -49,33 +49,16 @@ ${LIB_DIR}:
 ${OBJ_DIR}:
 	${MKDIR_P} ${OBJ_DIR}
 
-cleanall: clean cleanexamples
-	
 clean::
 	@rm -f src/gitversion.c
 	@rm -f $(allobj)
 	@rm -f $(targetC)
 	@rm -f $(targetF)
-	@rm -f $(modfiles)
-
-cleanfortran:
-	@rm -f $(F_OBJ_FILES)
-	@rm -f $(targetF)
-
-cleanc:
-	@rm -f src/gitversion.c
 	@rm -f $(OBJ_FILES)
-	@rm -f $(targetC)
-
-cleanexamples:
+	@rm -f $(F_OBJ_FILES) 
 	@rm -f $(EXAMPLE_EXECS)
 	@rm -f $(F_EXAMPLE_EXECS)
-
-cleanall: clean cleanexamples
-
-debug:
-	-@echo cc is ${CC}
-	-@echo FC is ${FC}
+	@rm -f $(modfiles)
 
 testsnlp: testsnlpc testsnlpF90
 

@@ -46,6 +46,7 @@ f_srcfiles := $(wildcard src/*.F90)
 includefiles:= $(wildcard include/*.h)
 allobj := $(wildcard obj/*.o)
 modfiles := $(wildcard obj/*.mod)
+modfiles += $(wildcard examples/*.mod)
 obj-suffix := o
 LIB_DIR	:= $(rootdir)/lib
 INCLUDE_DIR := $(rootdir)/include

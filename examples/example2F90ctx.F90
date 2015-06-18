@@ -68,7 +68,7 @@ program example1F90
    allocate(x(n))
    x = [-2.9,2.0]
    
-   call SNLPNew(s,n,m,p,c_funloc(fhg),c_null_funptr,c_loc(ctx_ptr))
+   call SNLPNew(s,n,m,p,c_funloc(fhg),c_funloc(Dfhg),c_loc(ctx_ptr))
    s%show_progress = 1
    
    exit_code = SNLPL1SQP(s,x)
