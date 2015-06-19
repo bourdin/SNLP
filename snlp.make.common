@@ -24,38 +24,32 @@ else
 	FLINKER := gfortran
 	LD_SHARED_F := gcc
 	LD_SHARED_C := gfortran
-	PETSCCFLAGS := ${CFLAGS}
-	PETSCCFLAGS := ${FFLAGS}
+	PETSCCFLAGS := ${CFLAGS} -g
+	PETSCCFLAGS := ${FFLAGS} -g
 	LDFLAGS := -lm
 endif
 
-ifndef METHOD
-	METHOD := dbg
-endif
-
-ifeq (METHOD,dbg)
-	PETSCCFLAGS += -g
-	PETSCFFLAGS += -g
-else ifeq (METHOD,opt)
-	PETSCCFLAGS += -O3
-	PETSCFFLAGS += -O3
+ifeq (${SNLP_DIR},)
+	SNLP_DIR := ${rootdir}/snlp
 endif
 # usefull variables and commands
 srcfiles := $(wildcard src/*.c)
 f_srcfiles := $(wildcard src/*.F90)
 includefiles:= $(wildcard include/*.h)
 allobj := $(wildcard obj/*.o)
-modfiles := $(wildcard obj/*.mod)
-modfiles += $(wildcard examples/*.mod)
+main_modfiles := $(wildcard obj/*.mod)
+modfiles := ${main_modfiles} ${example_modfiles}
+example_modfiles += $(wildcard examples/*.mod)
 obj-suffix := o
 LIB_DIR	:= $(rootdir)/lib
 INCLUDE_DIR := $(rootdir)/include
 EXAMPLES_DIR := $(rootdir)/examples
 OBJ_DIR	:= ${rootdir}/obj
-OBJ_FILES := $(addprefix ${OBJ_DIR}/,$(notdir $(srcfiles:.c=.$(METHOD).$(obj-suffix))))
-F_OBJ_FILES := $(addprefix ${OBJ_DIR}/,$(notdir $(f_srcfiles:.F90=.$(METHOD).$(obj-suffix))))
-
+OBJ_FILES := $(addprefix ${OBJ_DIR}/,$(notdir $(srcfiles:.c=snlpF90.$(obj-suffix))))
+F_OBJ_FILES := $(addprefix ${OBJ_DIR}/,$(notdir $(f_srcfiles:.F90=snlpF90.$(obj-suffix))))
+#usefull commands
 MKDIR_P	:= mkdir -p
+# Examples 
 EXAMPLE_FILES := $(EXAMPLES_DIR)/example1.c 
 EXAMPLE_FILES += $(EXAMPLES_DIR)/example2.c $(EXAMPLES_DIR)/example2ctx.c
 EXAMPLE_FILES += $(EXAMPLES_DIR)/example3.c 
@@ -84,7 +78,7 @@ else
 	UNAME_S := $(shell uname -s)
 	ifeq (${UNAME_S},Linux)
 		LIB_SUFFIX := so
-		LDFLAGS +=  -shared #-Wl,-soname,libsnlp.${METHOD}.${LIB_SUFFIX}
+		LDFLAGS +=  -shared #-Wl,-soname,libsnlp.${LIB_SUFFIX}
 		LIBLDC := ${CLINKER}
 		LIBLDF := ${FLINKER}
 	endif
