@@ -11,11 +11,11 @@ all:: directories gitversion $(targetC) $(targetF) allexamples
 
 targets: $(targetC) $(targetF)
 
-$(targetC): $(OBJ_FILES) | directories
+$(targetC): directories $(OBJ_FILES)
 	@echo "Linking "$(targetC)"..."
 	@${LIBLDC} ${PETSCCFLAGS} ${LDFLAGS} $(OBJ_FILES) -o $@ $(LIBS)
 
-$(targetF): $(F_OBJ_FILES) | directories
+$(targetF): directories $(F_OBJ_FILES)
 	@echo "Linking "$(targetF)"..."
 	@${LIBLDF} ${PETSCFFLAGS} ${LDFLAGS} $(F_OBJ_FILES) -I ${OBJ_DIR} -o $@ $(LIBS)
 
