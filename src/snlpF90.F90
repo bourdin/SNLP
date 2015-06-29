@@ -50,6 +50,7 @@ module SNLPF90
    public :: SNLPLinfSQP
    public :: SNLPL1SQP
    public :: SNLP
+   public :: SNLPSolve
    
    interface
       function SNLPNew_private(n,m,p,fhg,Dfhg,ctx) bind(c,name='SNLPNew')
@@ -111,4 +112,20 @@ Contains
 
       call SNLPDelete_private(c_loc(s))
    end subroutine SNLPDelete
+
+   subroutine SNLPSolve(n,m,p,fhg,Dfhg,ctx,x,x0)
+      real(kind=c_double),intent(inout)      :: x(*)
+      integer(kind=c_int),intent(IN)         :: n,m,p
+      type(c_funptr),value                   :: fhg,Dfhg
+      type(c_ptr)                            :: ctx
+      type(SNLP),pointer                     :: s
+      integer(kind=c_int)                    :: exit_code
+
+      call SNLPNew(s,n,m,p,fhg,Dfhg,ctx)
+      s%show_progress = 0
+      exit_code = SNLPL1SQP(s,x)
+      call SNLPDelete(s)
+   end subroutine SNLPSolve
+
+
 end module SNLPF90
