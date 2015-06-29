@@ -113,7 +113,7 @@ Contains
       call SNLPDelete_private(c_loc(s))
    end subroutine SNLPDelete
 
-   subroutine SNLPSolve(n,m,p,fhg,Dfhg,ctx,x,x0)
+   subroutine SNLPSolve(n,m,p,fhg,Dfhg,ctx,x)
       real(kind=c_double),intent(inout)      :: x(*)
       integer(kind=c_int),intent(IN)         :: n,m,p
       type(c_funptr),value                   :: fhg,Dfhg
