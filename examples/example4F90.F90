@@ -1,3 +1,10 @@
+!!! Copyright (c) 2015  B. Bourdin bourdin@lsu.edu
+!!!                     E. Tanné erwan.tanne@gmail.com
+!!!                     A. Mesgarnejad a.mesgarnejad@gmail.com
+!!! All rights reserved.
+!!! Use of this source code is governed by a BSD-style
+!!! license that can be found in the license.txt file.
+
 module example4F90_mod
 
 contains

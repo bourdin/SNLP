@@ -1,4 +1,5 @@
 // Copyright (c) 2013 Brian C. Fabien
+//               2015 B. Bourdin bourdin@lsu.edu
 // All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the license.txt file.

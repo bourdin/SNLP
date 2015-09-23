@@ -4,7 +4,10 @@ This is a fork of Brian C Fabien SNLP code from http://abs-5.me.washington.edu/s
 
 ### License ###
 
-Copyright (c) 2009,2010,2011,2012 Brian C. Fabien
+Copyright (c) 2009,2010,2011,2012 Brian C. Fabien, 
+              2015 B. Bourdin bourdin@lsu.edu
+                   E. Tanné erwan.tanne@gmail.com
+                   A. Mesgarnejad a.mesgarnejad@gmail.com
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
