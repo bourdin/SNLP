@@ -18,12 +18,12 @@ ifneq (${PETSC_DIR},)
 	LD_SHARED_C := ${LD_SHARED}
 else
 	LIBS := 
-	CC := gcc
-	CLINKER := gcc
-	FC := gfortran 
-	FLINKER := gfortran
-	LD_SHARED_F := gcc
-	LD_SHARED_C := gfortran
+	CC := icc
+	CLINKER := icc
+	FC := ifort 
+	FLINKER := ifort
+	LD_SHARED_F := icc
+	LD_SHARED_C := ifort
 	PETSCCFLAGS := ${CFLAGS} -g
 	PETSCCFLAGS := ${FFLAGS} -g
 	LDFLAGS := -lm
@@ -83,9 +83,9 @@ else
 		LIBLDF := ${FLINKER}
 	endif
 	ifeq (${UNAME_S},Darwin)
-		LDFLAGS += -g -dynamiclib -single_module -multiply_defined suppress -undefined dynamic_lookup ${DARWIN_COMMONS_USE_DYLIBS}
-		LIBLDC := ${LD_SHARED_C}
-		LIBLDF := ${LD_SHARED_F} 
+		LDFLAGS += -dynamiclib -single_module -multiply_defined suppress -undefined dynamic_lookup ${DARWIN_COMMONS_USE_DYLIBS}
+		LIBLDC := ${CLINKER}
+		LIBLDF := ${FLINKER}
 		LIB_SUFFIX = dylib
 	endif
 endif

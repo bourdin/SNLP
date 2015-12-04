@@ -13,7 +13,7 @@ targets: $(targetC) $(targetF)
 
 $(targetC): directories $(OBJ_FILES)
 	@echo "Linking "$(targetC)"..."
-	@${LIBLDC} ${PETSCCFLAGS} ${LDFLAGS} $(OBJ_FILES) -o $@ $(LIBS)
+	@${LIBLDC} ${PETSCCFLAGS} $(LIBS) ${LDFLAGS} $(OBJ_FILES) -o $@ 
 
 $(targetF): directories $(F_OBJ_FILES)
 	@echo "Linking "$(targetF)"..."
@@ -86,3 +86,11 @@ testsnlpF90: ${EXAMPLES_DIR}/example1F90
 	@if (${DIFF} -B ${EXAMPLES_DIR}/results/example1F90.out example1F90.out) then echo "Passed";\
 	else echo "Possible problem. Diffs above"; fi
 	-@${RM} example1F90.out 
+	
+debug:
+	@echo CLINKER: ${CLINKER}
+	@echo FLINKER: ${FLINKER}
+	@echo targetC: $(targetC)
+	@echo targetF: $(targetF)
+	@echo LD_SHARED_C: ${LD_SHARED_C}
+	@echo LD_SHARED_F: ${LD_SHARED_F}
