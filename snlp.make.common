@@ -24,8 +24,8 @@ else
 	FLINKER := ifort
 	LD_SHARED_F := icc
 	LD_SHARED_C := ifort
-	PETSCCFLAGS := ${CFLAGS} -g
-	PETSCCFLAGS := ${FFLAGS} -g
+	CC_FLAGS := ${CC_FLAGS} -g
+	FC_FLAGS := ${FC_FLAGS} -g
 	LDFLAGS := -lm
 endif
 

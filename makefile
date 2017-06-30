@@ -13,23 +13,23 @@ targets: $(targetC) $(targetF)
 
 $(targetC): directories $(OBJ_FILES)
 	@echo "Linking "$(targetC)"..."
-	@${LIBLDC} ${PETSCCFLAGS} $(LIBS) ${LDFLAGS} $(OBJ_FILES) -o $@ 
+	@${LIBLDC} ${CC_FLAGS} $(LIBS) ${LDFLAGS} $(OBJ_FILES) -o $@ 
 
 $(targetF): directories $(F_OBJ_FILES)
 	@echo "Linking "$(targetF)"..."
-	@${LIBLDF} ${PETSCFFLAGS} ${LDFLAGS} $(F_OBJ_FILES) -I ${OBJ_DIR} -o $@ $(LIBS)
+	@${LIBLDF} ${FC_FLAGS} ${LDFLAGS} $(F_OBJ_FILES) -I ${OBJ_DIR} -o $@ $(LIBS)
 
 ${OBJ_DIR}/%snlpF90.$(obj-suffix): ${rootdir}/src/%.c
-	${CC} ${PETSCCFLAGS} -I $(INCLUDE_DIR) -g -fPIC -c -o $@ $<
+	@${CC} ${CC_FLAGS} -I $(INCLUDE_DIR) -g -fPIC -c -o $@ $<
 
 ${OBJ_DIR}/%snlpF90.$(obj-suffix): ${rootdir}/src/%.F90
-	cd ${OBJ_DIR} && ${FC} ${PETSCFFLAGS} -g -fPIC -c -o $@ $< && cd ${rootdir}
+	cd ${OBJ_DIR} && ${FC} ${FC_FLAGS} -g -fPIC -c -o $@ $< && cd ${rootdir}
 
 ${EXAMPLES_DIR}/%: $(targetC) ${EXAMPLES_DIR}/%.c
-	@${CC} ${PETSCCFLAGS} -I $(INCLUDE_DIR) -L $(LIB_DIR) -lsnlp -fPIC -Wl,-rpath=${LIB_DIR} -o $@ $(word 2,$^)
+	@${CC} ${CC_FLAGS} -I $(INCLUDE_DIR) -L $(LIB_DIR) -lsnlp -fPIC -Wl,-rpath=${LIB_DIR} -o $@ $(word 2,$^)
 
 ${EXAMPLES_DIR}/%: $(targetC) $(targetF) ${EXAMPLES_DIR}/%.F90
-	cd ${EXAMPLES_DIR} && ${FLINKER} ${PETSCFFLAGS} -I$(OBJ_DIR) -L $(LIB_DIR) -lsnlp -lsnlpF90 -fPIC -Wl,-rpath=${LIB_DIR} -o $@ $(word 3,$^) && cd ${rootdir}
+	cd ${EXAMPLES_DIR} && ${FLINKER} ${FC_FLAGS} -I$(OBJ_DIR) -L $(LIB_DIR) -lsnlp -lsnlpF90 -fPIC -Wl,-rpath=${LIB_DIR} -o $@ $(word 3,$^) && cd ${rootdir}
 
 gitversion:
 	@python checkgit.py $(rootdir)
@@ -86,11 +86,14 @@ testsnlpF90: ${EXAMPLES_DIR}/example1F90
 	@if (${DIFF} -B ${EXAMPLES_DIR}/results/example1F90.out example1F90.out) then echo "Passed";\
 	else echo "Possible problem. Diffs above"; fi
 	-@${RM} example1F90.out 
-	
+
 debug:
 	@echo CLINKER: ${CLINKER}
 	@echo FLINKER: ${FLINKER}
-	@echo targetC: $(targetC)
-	@echo targetF: $(targetF)
+	@echo targetC: ${targetC}
+	@echo targetF: ${targetF}
 	@echo LD_SHARED_C: ${LD_SHARED_C}
 	@echo LD_SHARED_F: ${LD_SHARED_F}
+	@echo FC_FLAGS: ${FC_FLAGS}
+	@echo CC_FLAGS: ${CC_FLAGS}
+	@echo PETSCCFLAGS: ${PETSCCFLAGS}
