@@ -13,23 +13,23 @@ targets: $(targetC) $(targetF)
 
 $(targetC): directories $(OBJ_FILES)
 	@echo "Linking "$(targetC)"..."
-	@${LIBLDC} ${CC_FLAGS} $(LIBS) ${LDFLAGS} $(OBJ_FILES) -o $@ 
+	-@${LIBLDC} ${CC_FLAGS} $(LIBS) ${LDFLAGS} $(OBJ_FILES) -o $@ 
 
 $(targetF): directories $(F_OBJ_FILES)
 	@echo "Linking "$(targetF)"..."
-	@${LIBLDF} ${FC_FLAGS} ${LDFLAGS} $(F_OBJ_FILES) -I ${OBJ_DIR} -o $@ $(LIBS)
+	-@${LIBLDF} ${FC_FLAGS} ${LDFLAGS} $(F_OBJ_FILES) -I ${OBJ_DIR} -o $@ $(LIBS)
 
 ${OBJ_DIR}/%snlpF90.$(obj-suffix): ${rootdir}/src/%.c
-	@${CC} ${CC_FLAGS} -I $(INCLUDE_DIR) -g -fPIC -c -o $@ $<
+	-@${CC} ${CC_FLAGS} -I $(INCLUDE_DIR) -g -fPIC -c -o $@ $<
 
 ${OBJ_DIR}/%snlpF90.$(obj-suffix): ${rootdir}/src/%.F90
-	cd ${OBJ_DIR} && ${FC} ${FC_FLAGS} -g -fPIC -c -o $@ $< && cd ${rootdir}
+	-@cd ${OBJ_DIR} && ${FC} ${FC_FLAGS} -g -fPIC -c -o $@ $< && cd ${rootdir}
 
 ${EXAMPLES_DIR}/%: $(targetC) ${EXAMPLES_DIR}/%.c
-	@${CC} ${CC_FLAGS} -I $(INCLUDE_DIR) -L $(LIB_DIR) -lsnlp -fPIC -Wl,-rpath=${LIB_DIR} -o $@ $(word 2,$^)
+	-@${CC} ${CC_FLAGS} -I $(INCLUDE_DIR) -L $(LIB_DIR) -lsnlp -fPIC -Wl,-rpath=${LIB_DIR} -o $@ $(word 2,$^)
 
 ${EXAMPLES_DIR}/%: $(targetC) $(targetF) ${EXAMPLES_DIR}/%.F90
-	cd ${EXAMPLES_DIR} && ${FLINKER} ${FC_FLAGS} -I$(OBJ_DIR) -L $(LIB_DIR) -lsnlp -lsnlpF90 -fPIC -Wl,-rpath=${LIB_DIR} -o $@ $(word 3,$^) && cd ${rootdir}
+	-@cd ${EXAMPLES_DIR} && ${FLINKER} ${FC_FLAGS} -I$(OBJ_DIR) -L $(LIB_DIR) -lsnlp -lsnlpF90 -fPIC -Wl,-rpath=${LIB_DIR} -o $@ $(word 3,$^) && cd ${rootdir}
 
 gitversion:
 	@python checkgit.py $(rootdir)

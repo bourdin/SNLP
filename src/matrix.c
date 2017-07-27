@@ -50,7 +50,6 @@ long int MatrixAllocated() {
 }
 
 void MatrixDelete(Matrix m) {
-    int i;
     if (m == NULL) {
         return;
     }
@@ -396,8 +395,7 @@ void MatrixSet(Matrix m, int i, int j, double x) {
 
 // m->e[i][j] = x, for all i,j
 void MatrixSetAllTo(Matrix m, double x) {
-    int i, j;
-    double *mi;
+    int i;
     for (i = 0; i < m->r*m->c; i++) {
         m->stash[i] = x;
     }

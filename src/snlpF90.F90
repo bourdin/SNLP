@@ -115,7 +115,6 @@ Contains
    
    subroutine SNLPDelete(s)
       type(SNLP),pointer,intent(inout)       :: s
-      type(c_ptr)                            :: cptr
 
       call SNLPDelete_private(c_loc(s))
    end subroutine SNLPDelete

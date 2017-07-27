@@ -66,7 +66,6 @@ void pause() {
     char c;
     printf("\nPause ...");
     c = getchar();
-    c = c;
 }
 
 void RuntimeError(const char *string) {
