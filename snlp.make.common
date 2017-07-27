@@ -10,7 +10,7 @@ ifneq (${PETSC_DIR},)
 		include ${PETSC_DIR}/lib/petsc-conf/rules
 	else
 		# old PETSc
-		include ${PETSC_DIR}/conf/variables
+		#include ${PETSC_DIR}/conf/variables
 		include ${PETSC_DIR}/conf/rules
 	endif
 	LIBS := $(PETSC_LIB)
@@ -18,14 +18,14 @@ ifneq (${PETSC_DIR},)
 	LD_SHARED_C := ${LD_SHARED}
 else
 	LIBS := 
-	CC := icc
-	CLINKER := icc
-	FC := ifort 
-	FLINKER := ifort
-	LD_SHARED_F := icc
-	LD_SHARED_C := ifort
-	CC_FLAGS := ${CC_FLAGS} -g
-	FC_FLAGS := ${FC_FLAGS} -g
+	CC := gcc
+	CLINKER := gcc
+	FC := gfortran
+	FLINKER := gfortran
+	LD_SHARED_F := gcc
+	LD_SHARED_C := gfortran
+	SNLP_CC_FLAGS := ${CC_FLAGS} -g
+	SNLP_FC_FLAGS := ${FC_FLAGS} -g
 	LDFLAGS := -lm
 endif
 
