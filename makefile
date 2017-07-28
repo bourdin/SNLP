@@ -88,6 +88,8 @@ testsnlpF90: ${EXAMPLES_DIR}/example1F90
 	-@${RM} example1F90.out 
 
 debug:
+	@echo CC:      ${CC}
+	@echo FC:      ${FC}
 	@echo CLINKER: ${CLINKER}
 	@echo FLINKER: ${FLINKER}
 	@echo targetC: ${targetC}

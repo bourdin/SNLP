@@ -10,7 +10,7 @@ ifneq (${PETSC_DIR},)
 		include ${PETSC_DIR}/lib/petsc-conf/rules
 	else
 		# old PETSc
-		#include ${PETSC_DIR}/conf/variables
+		include ${PETSC_DIR}/conf/variables
 		include ${PETSC_DIR}/conf/rules
 	endif
 	LIBS := $(PETSC_LIB)
