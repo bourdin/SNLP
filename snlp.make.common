@@ -8,6 +8,10 @@ ifneq (${PETSC_DIR},)
 		# newer than 3.5
 		include ${PETSC_DIR}/lib/petsc-conf/variables
 		include ${PETSC_DIR}/lib/petsc-conf/rules
+	else ifneq ($(wildcard ${PETSC_DIR}/lib/petsc/conf/.*),)
+		# newer than ???
+		include ${PETSC_DIR}/lib/petsc/conf/variables
+		include ${PETSC_DIR}/lib/petsc/conf/rules
 	else
 		# old PETSc
 		include ${PETSC_DIR}/conf/variables
@@ -16,6 +20,8 @@ ifneq (${PETSC_DIR},)
 	LIBS := $(PETSC_LIB)
 	LD_SHARED_F := ${LD_SHARED}
 	LD_SHARED_C := ${LD_SHARED}
+	SNLP_CC_FLAGS := ${CC_FLAGS}
+	SNLP_FC_FLAGS := ${FC_FLAGS}
 else
 	LIBS := 
 	CC := gcc
