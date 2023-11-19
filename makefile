@@ -32,7 +32,7 @@ ${EXAMPLES_DIR}/%: $(targetC) $(targetF) ${EXAMPLES_DIR}/%.F90
 	cd ${EXAMPLES_DIR} && ${FLINKER} ${SNLP_FC_FLAGS} -I$(OBJ_DIR) -L $(LIB_DIR) -lsnlp -lsnlpF90 -fPIC -Wl,-rpath,${LIB_DIR} -o $@ $(word 3,$^) && cd ${rootdir}
 
 gitversion:
-	@python checkgit.py $(rootdir)
+	@python3 checkgit.py $(rootdir)
 	@if [ -s src/gitversion.c  ]; then \
 		${CC} -c src/gitversion.c -o ${OBJ_DIR}/gitversion.o ;\
 	fi;
