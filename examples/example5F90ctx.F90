@@ -81,7 +81,6 @@ program example5F90
    integer(kind=c_int)  :: m = 1
    integer(kind=c_int)  :: p = 6
    type(SNLP),pointer   :: s
-   integer              :: i,j
    integer(kind=c_int)  :: exit_code
    real(kind=c_double),dimension(:),pointer  ::x
    type(ctx),target     :: ctx_ptr

@@ -41,6 +41,7 @@ contains
 
       real(kind=c_double),dimension(:,:), pointer  :: Dgptr      
 
+      call c_f_pointer(myctx,myctx_ptr)      
       Df(1) = -2. * myctx_ptr%b * x(1)*(x(2)-x(1)**2) - 2.0*(1.-x(1));
       Df(2) = myctx_ptr%b*(x(2)-x(1)**2);
 

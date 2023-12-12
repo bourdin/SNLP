@@ -30,7 +30,6 @@ void fhg(double *x, double *f, double *h, double *g, void *c) {
 void Dfhg(double *x, double *Df, double **Dh, double **Dg, void *c) {
     double x1 = x[0];
     double x2 = x[1];
-    double x3 = x[2];
     userctx *ctx = (userctx*) c;
 
     Df[0] = 2. * ctx->A[0] * (x1-ctx->p[0]);
