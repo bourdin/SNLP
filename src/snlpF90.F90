@@ -84,7 +84,7 @@ module SNLPF90
          use,intrinsic :: iso_c_binding
          use SNLP_mod
 
-         type(SNLP)                      :: s
+         type(SNLP),intent(inout)               :: s
          real(kind=c_double),intent(inout)      :: x(*)
          integer(kind=c_int)                    :: SNLPL1SQP
       end function SNLPL1SQP
@@ -95,7 +95,7 @@ module SNLPF90
          use,intrinsic :: iso_c_binding
          use SNLP_mod
 
-         type(SNLP)                      :: s
+         type(SNLP),intent(inout)               :: s
          real(kind=c_double),intent(inout)      :: x(*)
          integer(kind=c_int)                    :: SNLPLinfSQP
       end function SNLPLinfSQP
@@ -118,8 +118,4 @@ Contains
 
       call SNLPDelete_private(c_loc(s))
    end subroutine SNLPDelete
-
-
-
-
 end module SNLPF90

@@ -87,7 +87,7 @@ else
 		LIBLDF := ${FLINKER}
 	endif
 	ifeq (${UNAME_S},Darwin)
-		LDFLAGS += -dynamiclib -single_module -multiply_defined suppress -undefined dynamic_lookup ${DARWIN_COMMONS_USE_DYLIBS}
+		LDFLAGS += -dynamiclib -undefined dynamic_lookup ${DARWIN_COMMONS_USE_DYLIBS}
 		LIBLDC := ${CLINKER}
 		LIBLDF := ${FLINKER}
 		LIB_SUFFIX = dylib
